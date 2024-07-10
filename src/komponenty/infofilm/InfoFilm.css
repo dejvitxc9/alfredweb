@@ -1,0 +1,83 @@
+.info-film-page {
+  margin: auto;
+  width: 80%;
+  height: 100%;
+  display: flex;
+}
+.film-main {
+  border: 3px #3d3d3d solid;
+  background-color: white;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  border-radius: 3rem;
+  flex-grow: 1;
+  position: relative;
+}
+.item-nie-link {
+  text-decoration: none;
+  color: black;
+}
+.tytul-filmu {
+  font-size: 4rem;
+  line-height: 5rem;
+}
+
+.blok-tytulu {
+  width: 100%;
+  min-width: 30rem;
+  height: 20rem;
+  position: relative;
+}
+.film-poster {
+  height: 20rem;
+  margin-right: 1rem;
+  width: auto;
+  display: block;
+  float: left;
+}
+
+.guzik-nie-link {
+  text-decoration: none;
+  color: black;
+}
+
+
+.dane-filmu {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 40%;
+  min-width: 30rem;
+}
+.ocena-filmu {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.parametry-filmu {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 10px;
+}
+.grid-item {
+  background-color: #eaeaea;
+  padding: 20px;
+}
+.opis-filmu {
+  margin-top: 1rem;
+  font-size: 17px;
+}
+.guziki-administracyjne {
+  display: flex;
+  cursor: pointer;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  
+}
+.guzik-edycja {
+  width: 3rem;
+  height: 2rem;
+}

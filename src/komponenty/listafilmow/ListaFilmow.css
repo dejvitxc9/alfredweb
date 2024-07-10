@@ -1,0 +1,31 @@
+.lista-page {
+  width: 80%;
+  margin: auto;
+}
+.lista-main {
+  border: 3px #3d3d3d solid;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  border-radius: 3rem;
+  background-color: white;
+}
+.item-nie-link {
+  text-decoration: none;
+  color: black;
+}
+.progress {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 5px;
+  background-color: #2c2c2caa;
+}
+.bar{
+  display: block;
+  width: 4rem;
+  height: 5px;
+  background-image: linear-gradient(90deg, #33ffbb, #31acff, #2ad39f, #0170f0);
+}

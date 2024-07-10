@@ -1,0 +1,63 @@
+.item-film {
+  width: 100%;
+  height: 10rem;
+  display: grid;
+  border: 2px black solid;
+  margin-bottom: 2rem;
+  display: flex;
+}
+.item-film:hover{
+  scale: 1.005;
+  background-color: rgb(219, 219, 219);
+}
+
+.item-poster {
+  height: 10rem;
+  width: 7.2rem;
+  object-fit: cover;
+}
+
+.item-film > section:nth-child(1) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  width: 3rem;
+}
+.item-film > section:nth-child(2) {
+  width: 10rem;
+}
+.item-film > section:nth-child(3) {
+  width: 50%;
+  height: 100%;
+}
+.item-film > section:nth-child(3) > h1 {
+  width: 100%;
+  margin-top: 0.5rem;
+  height: 4rem;
+}
+.item-film > section:nth-child(3) > h3 {
+  width: 100%;
+  height: 3rem;
+}
+.item-film > section:nth-child(3) > h4 {
+  width: 100%;
+  height: 2rem;
+}
+.item-film > section:nth-child(4) {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.gwiazdka {
+  height: 3rem;
+  width: auto;
+}
+.ocena-tekst{
+  font-size: 2rem;
+  margin-left: 0.5rem;
+  margin-right: 2rem;
+  line-height: 3rem;
+}

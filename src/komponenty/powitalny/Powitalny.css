@@ -1,0 +1,39 @@
+.powitalny-page{
+    width: 80%;
+    margin: auto;
+    border: 3px #3d3d3d solid;
+    border-radius: 3rem;
+    background-color: white;
+}
+.powitalny-header{
+    height: 20rem;
+}
+
+.powitalny-header > h1{
+    text-align: center;
+    word-spacing: 2rem;
+    letter-spacing: 0.5rem;
+    font-size: 4rem;
+    line-height: 9rem;
+    font-variant: small-caps;
+}
+
+.powitalny-main{
+    margin: 2rem 4rem;
+}
+
+.duzy-pepe{
+    width: 20rem;
+    height: auto;
+    text-overflow: ellipsis;
+    display: block;
+    float: left;
+}
+
+.powitalny-zalety{
+    margin-left: 3rem;
+    list-style-type: circle;
+}
+.powitalny-zalety >li{
+    line-height: 2rem;
+}
