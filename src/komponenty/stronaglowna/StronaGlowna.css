@@ -55,9 +55,10 @@
 .app-main {
   width: 100%;
   height: 30%;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  background-image: url("https://www.filmbox.com/vectra/assets/img/bg-1366.jpg");
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-image: url("../../pictures/alfredweb_background.png");
+  background-size: cover;
   overflow-y: auto;
   flex-grow: 1;
   justify-content: center;

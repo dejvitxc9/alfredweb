@@ -1,209 +1,328 @@
 import { useState, useEffect } from "react";
 import "./Dodawanie.css";
 import { useNavigate } from "react-router-dom";
+import { addDoc, collection, updateDoc, doc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { firestore } from "../../firebaseConfig.js";
 
-function Dodawanie(props) {
+function Dodawanie({
+  fetchAndDisplayAllMovieData,
+  editing,
+  movieId,
+  movieData,
+}) {
   const navigate = useNavigate();
   const [tytul, setTytul] = useState("");
   const [rok, setRok] = useState("");
   const [ocena, setOcena] = useState("");
   const [opis, setOpis] = useState("");
-  const [gatunek, setGatunek] = useState([]);
   const [rezyser, setRezyser] = useState("");
-  const [plakatURL, setPlakatURL] = useState(
-    "https://cdn-icons-png.flaticon.com/128/5762/5762943.png"
-  );
   const [tekstGuzika, setTekstGuzika] = useState("Dodaj film");
+  const [moviePosterURL, setMoviePosterURL] = useState("");
 
   useEffect(() => {
-    if (!props.adding) {
-      setTekstGuzika("Zatwierdź");
-      setTytul(props.aktualneDaneFilmu.tytul);
-      setRok(props.aktualneDaneFilmu.rok);
-      setOcena(props.aktualneDaneFilmu.ocena);
-      setOpis(props.aktualneDaneFilmu.opis);
-      setRezyser(props.aktualneDaneFilmu.rezyser);
-      setGatunek(props.aktualneDaneFilmu.gatunek);
-      setPlakatURL(props.aktualneDaneFilmu.plakat);
-      const gatunki = document.formularz.gatunek;
-      for (let i = 0; i < gatunki.length; i++) {
-        if (props.aktualneDaneFilmu.gatunek.includes(gatunki[i].value)) {
-          gatunki[i].checked = true;
+    const genreButtons = document.formularz.gatunek;
+
+    if (editing) {
+      setTytul(movieData.title);
+      setRok(movieData.year);
+      setOcena(movieData.rates);
+      setOpis(movieData.describtion);
+      setRezyser(movieData.director);
+      setTekstGuzika("Zakualizuj");
+      setMoviePosterURL(movieData.poster);
+
+      const choosenGenre = movieData.genre;
+
+      for (let i = 0; i < choosenGenre.length; i++) {
+        for (let l = 0; l < genreButtons.length; l++) {
+          if (choosenGenre[i] === genreButtons[l].value) {
+            genreButtons[l].checked = true;
+            console.log(genreButtons[l].value);
+          }
         }
       }
-      console.log(gatunek);
-    }
-  }, [props.adding, props.aktualneDaneFilmu]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const gatunki = document.formularz.gatunek;
-    const zaznaczoneGatunki = [];
-
-    for (let i = 0; i < gatunki.length; i++) {
-      if (gatunki[i].checked) {
-        zaznaczoneGatunki.push(gatunki[i].value);
+    } else {
+      setTytul("");
+      setRok("");
+      setOcena("");
+      setOpis("");
+      setRezyser("");
+      setTekstGuzika("Dodaj film");
+      for (let l = 0; l < genreButtons.length; l++) {
+        genreButtons[l].checked = false;
       }
     }
-    setGatunek(zaznaczoneGatunki);
+  }, [editing]);
 
-    if (props.adding) {
-      const nowyFilm = {
-        id: props.idNowego + 1,
-        tytul: tytul,
-        rok: rok,
-        ocena: ocena,
-        opis: opis,
-        gatunek: zaznaczoneGatunki,
-        rezyser: rezyser,
-        plakat: plakatURL,
-      };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-      console.log(nowyFilm);
-      props.addFilm(nowyFilm);
-    }
+    try {
+      const gatunki = document.formularz.gatunek;
+      const zaznaczoneGatunki = [];
 
-    if (!props.adding) {
-      const zaktualizowanyFilm = {
-        id: props.aktualneDaneFilmu.id,
-        tytul: tytul,
-        rok: rok,
-        ocena: ocena,
-        opis: opis,
-        gatunek: zaznaczoneGatunki,
-        rezyser: rezyser,
-        plakat: plakatURL,
-      };
-      props.editFilm(zaktualizowanyFilm);
+      for (let i = 0; i < gatunki.length; i++) {
+        if (gatunki[i].checked) {
+          zaznaczoneGatunki.push(gatunki[i].value);
+        }
+      }
 
+      const colRef = collection(firestore, "movie");
+
+      if (editing) {
+        const docRef = doc(firestore, "movie", movieId);
+        await updateDoc(docRef, {
+          title: tytul,
+          year: rok,
+          rates: ocena,
+          describtion: opis,
+          genre: zaznaczoneGatunki,
+          poster: movieData.poster,
+          director: rezyser,
+        });
+      } else {
+        const storage = getStorage();
+        const moviePoster = document.formularz.formFile.files[0];
+
+        const storageRef = ref(storage, `posters/${moviePoster.name}`);
+        await uploadBytes(storageRef, moviePoster);
+        const downloadURL = await getDownloadURL(storageRef);
+        await addDoc(colRef, {
+          title: tytul,
+          year: rok,
+          rates: ocena,
+          describtion: opis,
+          genre: zaznaczoneGatunki,
+          poster: downloadURL,
+          director: rezyser,
+        });
+      }
+      fetchAndDisplayAllMovieData();
       navigate("/filmy");
+    } catch (error) {
+      console.error("Błąd przy dodawaniu dokumentu: ", error);
+      alert("Wystąpił błąd przy dodawaniu filmu.");
     }
-    setTytul("");
-    setRok("");
-    setOcena("");
-    setOpis("");
-    setRezyser("");
-    setPlakatURL("https://cdn-icons-png.flaticon.com/128/5762/5762943.png");
   };
+
   return (
     <>
-      <img
-        src={plakatURL}
-        alt="podgląd zdjęcia"
-        className="plakat-showcase"
-      ></img>
+      {moviePosterURL ? (
+        <img
+          src={moviePosterURL}
+          alt="podgląd zdjęcia"
+          className="plakat-showcase"
+        ></img>
+      ) : (
+        <></>
+      )}
       <form onSubmit={handleSubmit} name="formularz" className="formularz">
-        <label>
-          Tytuł:
+        <div className="mb-3">
+          <label htmlFor="tytul" className="form-label">
+            Tytuł:
+          </label>
           <input
             type="text"
+            id="tytul"
             name="tytul"
-            className="input-bootstrap"
+            className="form-control"
             value={tytul}
             onChange={(e) => setTytul(e.target.value)}
             placeholder="Tytuł filmu"
             required
           />
-        </label>
+        </div>
 
-        <div>
-          <label className="liczby">
-            Rok:
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label htmlFor="rok" className="form-label">
+              Rok:
+            </label>
             <input
               type="number"
+              id="rok"
               name="rok"
-              className="input-bootstrap"
+              className="form-control"
               value={rok}
-              min={1920}
-              max={2030}
+              min="1920"
+              max="2030"
               onChange={(e) => setRok(e.target.value)}
               placeholder="Rok produkcji"
               required
             />
-          </label>
-
-          <label className="liczby">
-            Ocena:
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="ocena" className="form-label">
+              Ocena:
+            </label>
             <input
               type="number"
+              id="ocena"
               name="ocena"
-              className="input-bootstrap"
+              className="form-control"
               value={ocena}
-              min={0}
-              max={10}
-              step={0.1}
-              placeholder="Ocena filmu"
+              min="0"
+              max="10"
+              step="0.1"
               onChange={(e) => setOcena(e.target.value)}
+              placeholder="Ocena filmu"
             />
-          </label>
+          </div>
         </div>
 
-        <label htmlFor="opis">Opis:</label>
-        <textarea
-          id="opis"
-          name="opis"
-          className="opis-bootstrap"
-          value={opis}
-          onChange={(e) => setOpis(e.target.value)}
-          placeholder="Opis filmu, zarys fabuły lub ciekawostki na temat powstawania"
-        />
-
-        <div>Gatunek:</div>
-        <div class="gatunek-container">
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Dramat" /> Dramat
+        <div className="mb-3">
+          <label htmlFor="opis" className="form-label">
+            Opis:
           </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Komedia" /> Komedia
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Akcja" /> Akcja
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Thriller" /> Thriller
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Sci-Fi" /> Sci-Fi
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Przygodowy" />{" "}
-            Przygodowy
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Romans" /> Romans
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Fantasy" /> Fantasy
-          </label>
-          <label class="gatunek-item">
-            <input type="checkbox" name="gatunek" value="Animowany" /> Animowany
-          </label>
+          <textarea
+            id="opis"
+            name="opis"
+            className="form-control"
+            value={opis}
+            onChange={(e) => setOpis(e.target.value)}
+            placeholder="Opis filmu, zarys fabuły lub ciekawostki na temat powstawania"
+          ></textarea>
         </div>
 
-        <label>
-          Reżyser:
+        <div className="mb-3">
+          <label className="form-label">Gatunek:</label>
+          <div className="grid-3x3">
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Dramat"
+                id="dramat"
+              />
+              <label className="form-check-label" htmlFor="dramat">
+                Dramat
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Komedia"
+                id="komedia"
+              />
+              <label className="form-check-label" htmlFor="komedia">
+                Komedia
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Akcja"
+                id="akcja"
+              />
+              <label className="form-check-label" htmlFor="akcja">
+                Akcja
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Thriller"
+                id="thriller"
+              />
+              <label className="form-check-label" htmlFor="thriller">
+                Thriller
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Sci-Fi"
+                id="sci-fi"
+              />
+              <label className="form-check-label" htmlFor="sci-fi">
+                Sci-Fi
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Przygodowy"
+                id="przygodowy"
+              />
+              <label className="form-check-label" htmlFor="przygodowy">
+                Przygodowy
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Romans"
+                id="romans"
+              />
+              <label className="form-check-label" htmlFor="romans">
+                Romans
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Fantasy"
+                id="fantasy"
+              />
+              <label className="form-check-label" htmlFor="fantasy">
+                Fantasy
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                name="gatunek"
+                value="Animowany"
+                id="animowany"
+              />
+              <label className="form-check-label" htmlFor="animowany">
+                Animowany
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="rezyser" className="form-label">
+            Reżyser:
+          </label>
           <input
             type="text"
+            id="rezyser"
             name="rezyser"
-            className="input-bootstrap"
+            className="form-control"
             value={rezyser}
             onChange={(e) => setRezyser(e.target.value)}
             placeholder="Imie i nazwisko reżysera/reżyserów"
           />
-        </label>
-
-        <label>
-          Plakat:
-          <input
-            type="url"
-            name="plakat"
-            placeholder="Adres URL do plakatu"
-            className="input-bootstrap"
-            value={plakatURL}
-            onChange={(e) => setPlakatURL(e.target.value)}
-          />
-        </label>
+        </div>
+        {editing ? (
+          <></>
+        ) : (
+          <div className="mb-3">
+            <label htmlFor="formFile" className="form-label">
+              Wgraj Plakat Filmu
+            </label>
+            <input className="form-control" type="file" id="formFile"></input>
+          </div>
+        )}
 
         <button type="submit" className="btn-gr">
           {tekstGuzika}

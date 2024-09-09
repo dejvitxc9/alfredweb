@@ -1,6 +1,5 @@
 import "./StronaGlowna.css";
 import { Link, Outlet } from "react-router-dom";
-import pepe from "../../pictures/pepe.png";
 
 function StronaGlowna() {
   return (
@@ -9,8 +8,8 @@ function StronaGlowna() {
         <section>
           <Link to={"/"} className="link">
             <div className="item-menu">
-            <img src={pepe} ale="Logo pepeweb" className="app-logo"></img>
-              <h2>PEPEWEB</h2>
+            <img src="/images/alfred_image.png" ale="Logo AlfredWeb" className="app-logo"></img>
+              <h2>AlfredWeb</h2>
             </div>
           </Link>
           <Link to={"/"} className="link">
