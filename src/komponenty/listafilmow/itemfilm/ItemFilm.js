@@ -3,18 +3,18 @@ import star from "../../../pictures/star.png";
 
 function ItemFilm({ movieData, index }) {
   return (
-    <div className="item-film">
-      <section>
+    <div className="movie-item">
+      <section className="index-sec">
         <p>{index + 1}</p>
       </section>
-      <section>
+      <section className="poster-sec">
         <img
           className="item-poster"
           src={movieData.poster}
           alt={movieData.title}
         ></img>
       </section>
-      <section>
+      <section className="desc-sec">
         {" "}
         <h1>{movieData.title}</h1>
         <h3>
@@ -24,8 +24,8 @@ function ItemFilm({ movieData, index }) {
         </h3>
         <h4>Gatunek: {movieData.genre.map((genre) => genre + ", ")}</h4>
       </section>
-      <section>
-        <img src={star} className="gwiazdka" alt="ocena"></img>
+      <section className="rating-sec">
+        <img src={star} className="star-image" alt="ocena"></img>
         <p className="ocena-tekst">{movieData.rates}</p>
       </section>
     </div>

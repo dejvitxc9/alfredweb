@@ -21,19 +21,30 @@ function InfoFilm({ movieId, movieData, fetchAndDisplayAllMovieData }) {
   };
 
   return (
-    <div className="info-film-page">
-      <main className="film-main">
-        <section className="blok-tytulu">
-          <img
-            className="film-poster"
-            src={movieData.poster}
-            alt={movieData.title}
-          ></img>
-          <h1 className="tytul-filmu">{movieData.title}</h1>
+    <div className="film-container">
+      <section className="admin-buttons">
+        <Link to={`/filmy/${movieId}/edycja`}>
+          <div className="btn btn-success">Edytuj</div>
+        </Link>
+        <div className="btn btn-danger" onClick={usuniecieFilmu}>
+          Usuń
+        </div>
+      </section>
+      <section className="title-container">
+        <img
+          className="movie-poster"
+          src={movieData.poster}
+          alt={movieData.title}
+        ></img>
+        <section>
+          <h1>{movieData.title}</h1>
           <h2>{movieData.year}</h2>
-          <section className="dane-filmu">
-            <section className="ocena-filmu">
-              <img src={star} className="gwiazdka" alt="ocena"></img>
+        </section>
+
+        <section className="movie-data-container">
+          <section className="data-container">
+            <section className="rating-container">
+              <img src={star} className="star-image" alt="ocena"></img>
               <p className="ocena-tekst">{movieData.rates}</p>
             </section>
             <section className="parametry-filmu">
@@ -46,20 +57,11 @@ function InfoFilm({ movieId, movieData, fetchAndDisplayAllMovieData }) {
             </section>
           </section>
         </section>
-        <section className="opis-filmu">
-          <p>{movieData.describtion}</p>
-          <p>ID:{movieId}</p>
-        </section>
-
-        <section className="guziki-administracyjne">
-          <Link to={`/filmy/${movieId}/edycja`} className="guzik-nie-link">
-            <div className="btn btn-success guzik-edycja">Edytuj</div>
-          </Link>
-          <div className="btn btn-danger guzik-edycja" onClick={usuniecieFilmu}>
-            Usuń
-          </div>
-        </section>
-      </main>
+      </section>
+      <section className="opis-filmu">
+        <p>{movieData.describtion}</p>
+        <code className="id-describe">ID:{movieId}</code>
+      </section>
     </div>
   );
 }
