@@ -26,7 +26,7 @@ function Dodawanie({
     if (editing) {
       setTytul(movieData.title);
       setRok(movieData.year);
-      setOcena(movieData.rates);
+      setOcena(movieData.rating);
       setOpis(movieData.describtion);
       setRezyser(movieData.director);
       setTekstGuzika("Zakualizuj");
@@ -68,14 +68,19 @@ function Dodawanie({
         }
       }
 
-      const colRef = collection(firestore, "movie");
+      if (zaznaczoneGatunki.length === 0) {
+        alert("Nie wybrałeś gatunku filmu, zrób to teraz.");
+        return 0;
+      }
+
+      const colRef = collection(firestore, "movies");
 
       if (editing) {
-        const docRef = doc(firestore, "movie", movieId);
+        const docRef = doc(firestore, "movies", movieId);
         await updateDoc(docRef, {
           title: tytul,
           year: rok,
-          rates: ocena,
+          rating: ocena,
           describtion: opis,
           genre: zaznaczoneGatunki,
           poster: movieData.poster,
@@ -91,7 +96,7 @@ function Dodawanie({
         await addDoc(colRef, {
           title: tytul,
           year: rok,
-          rates: ocena,
+          rating: ocena,
           describtion: opis,
           genre: zaznaczoneGatunki,
           poster: downloadURL,
@@ -167,6 +172,7 @@ function Dodawanie({
               step="0.1"
               onChange={(e) => setOcena(e.target.value)}
               placeholder="Ocena filmu"
+              required
             />
           </div>
         </div>
@@ -182,6 +188,7 @@ function Dodawanie({
             value={opis}
             onChange={(e) => setOpis(e.target.value)}
             placeholder="Opis filmu, zarys fabuły lub ciekawostki na temat powstawania"
+            required
           ></textarea>
         </div>
 
@@ -311,6 +318,7 @@ function Dodawanie({
             value={rezyser}
             onChange={(e) => setRezyser(e.target.value)}
             placeholder="Imie i nazwisko reżysera/reżyserów"
+            required
           />
         </div>
         {editing ? (
@@ -320,7 +328,12 @@ function Dodawanie({
             <label htmlFor="formFile" className="form-label">
               Wgraj Plakat Filmu
             </label>
-            <input className="form-control" type="file" id="formFile"></input>
+            <input
+              className="form-control"
+              type="file"
+              id="formFile"
+              required
+            ></input>
           </div>
         )}
 

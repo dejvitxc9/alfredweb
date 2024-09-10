@@ -7,7 +7,7 @@ import { firestore } from "../../firebaseConfig";
 function InfoFilm({ movieId, movieData, fetchAndDisplayAllMovieData }) {
   const navigate = useNavigate();
 
-  const docRef = doc(firestore, "movie", movieId);
+  const docRef = doc(firestore, "movies", movieId);
 
   const usuniecieFilmu = async () => {
     const verifyDelete = window.prompt(
@@ -45,7 +45,7 @@ function InfoFilm({ movieId, movieData, fetchAndDisplayAllMovieData }) {
           <section className="data-container">
             <section className="rating-container">
               <img src={star} className="star-image" alt="ocena"></img>
-              <p className="ocena-tekst">{movieData.rates}</p>
+              <p className="ocena-tekst">{movieData.rating}</p>
             </section>
             <section className="parametry-filmu">
               <div className="grid-item">Reżyser:</div>

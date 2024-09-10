@@ -26,7 +26,7 @@ function ItemFilm({ movieData, index }) {
       </section>
       <section className="rating-sec">
         <img src={star} className="star-image" alt="ocena"></img>
-        <p className="ocena-tekst">{movieData.rates}</p>
+        <p className="ocena-tekst">{movieData.rating}</p>
       </section>
     </div>
   );

@@ -15,7 +15,7 @@ function App() {
 
   async function fetchAndDisplayAllMovieData() {
     try {
-      const collectionRef = collection(firestore, "movie");
+      const collectionRef = collection(firestore, "movies");
       const querySnapchot = await getDocs(collectionRef);
 
       const queryData = querySnapchot.docs.map((doc) => ({
