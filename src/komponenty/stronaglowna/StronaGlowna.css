@@ -4,7 +4,9 @@
   min-width: 1000px;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  background-image: url("../../pictures/alfredweb_background.png");
+  background-size: contain;
+  background-repeat: repeat;
 }
 .app-header {
   background-color: #000000;
@@ -57,17 +59,15 @@
   height: 30%;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  background-image: url("../../pictures/alfredweb_background.png");
-  background-size: cover;
   overflow-y: auto;
   flex-grow: 1;
   justify-content: center;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 900px) {
   .App {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     min-width: 1000px;
     display: flex;
     flex-direction: column;
@@ -76,3 +76,5 @@
     overflow-y:visible;
   }
 }
+
+
