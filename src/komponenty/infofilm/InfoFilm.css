@@ -1,7 +1,7 @@
 .film-container {
   margin: auto;
   width: 80%;
-  height: 100%;
+  min-height: 100%;
   border: 3px #3d3d3d solid;
   background-color: white;
   padding: 2rem;
@@ -20,7 +20,7 @@
   gap: 10px;
 }
 
-.parametry-filmu {
+.movie-data-grid {
   display: grid;
   grid-template-columns: minmax(100px, 150px) minmax(150px, 300px);
   grid-template-rows: 100px 100px;
@@ -35,7 +35,6 @@
 .rating-container {
   display: flex;
   flex-wrap: wrap;
-
 }
 
 .movie-data-container {
@@ -56,7 +55,47 @@
   border: 1px solid black;
 }
 
-.id-describe{
+.id-describe {
   color: #999999;
   float: right;
+}
+
+.movie-describtion-container {
+  margin-top: 1rem;
+}
+
+.movie-describtion {
+  font-size: large;
+}
+
+#commenterContent {
+  min-height: 108px;
+}
+
+.comment-body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: #dbdbdb;
+  margin-bottom: .5rem;
+  padding: .3rem;
+  border-radius: 1rem;
+}
+.comment-body > p {
+  margin-top: 1rem;
+}
+
+.comment-author {
+  padding-left: 1rem;
+  width: 30%;
+  min-width: 380px;
+}
+
+.comment-content {
+  padding-left: 1rem;
+  width: 70%;
+}
+
+.comment-body span{
+  font-weight: bold;
 }
